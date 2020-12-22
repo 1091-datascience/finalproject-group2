@@ -30,11 +30,11 @@ Rscript code/your_script.R --input data/training --output results/performance.ts
 
 ### data
 
-* Source 
+* Source <br>
 SOCIETY OF ACTUARIES<br>Predictive Analytics Exam
   
 
-* Input format
+* Input format <br>
 66782 observations and 8 feactures
   
 * Any preprocessing?
