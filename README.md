@@ -10,8 +10,8 @@
 預測病人是否再次住院
 
 ### data source
-SOCIETY OF ACTUARIES
-Predictive Analytics Exam
+SOCIETY OF ACTUARIES<br>Predictive Analytics Exam
+
 
 ### Demo 
 You should provide an example commend to reproduce your result
