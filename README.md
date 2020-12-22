@@ -1,4 +1,4 @@
-# [group2] Title of your final project
+# [group2] Hospital Readmissions prediction
 
 ### Groups
 * 張家瑜, 108356015
@@ -8,6 +8,10 @@
 
 ### Goal
 預測病人是否再次住院
+
+### data source
+SOCIETY OF ACTUARIES
+Predictive Analytics Exam
 
 ### Demo 
 You should provide an example commend to reproduce your result
