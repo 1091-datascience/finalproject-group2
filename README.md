@@ -1,13 +1,13 @@
-# [GroupID] Title of your final project
+# [group2] Title of your final project
 
 ### Groups
-* name, student ID1
-* name, student ID2
-* name, student ID3
-* ...
+* 張家瑜, 108356015
+* 謝嘉倫, 108354024
+* 黃俊鈞, 108971005
+* 林晉毅, 107207426
 
 ### Goal
-A breif introduction about your project, i.e., what is your goal?
+預測病人是否再次住院
 
 ### Demo 
 You should provide an example commend to reproduce your result
