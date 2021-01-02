@@ -50,8 +50,8 @@ xgboost for binary classification
 Cross-validation
 ### results
 
-* Which metric do you use 
-  * average AUC of test data in kfold
+* Which metric do you use <br>
+average AUC of test data in kfold
 * Is your improvement significant?
 * What is the challenge part of your project? 
 
