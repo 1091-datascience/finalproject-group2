@@ -151,7 +151,8 @@ ggplot(plotdata, aes(d = true, m = score, color = fold)) + geom_roc(n.cuts = 0) 
   theme(plot.title=element_text(hjust = 0.5)) +
   annotate("text",x=0.65,y=0.1,label=paste("average AUC =",performance[kfold+1,3]))
   
-
+#匯出====
+write.csv(performance,file="result.csv",quote=F,row.names=F)
 
 
 
