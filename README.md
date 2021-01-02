@@ -38,25 +38,33 @@ SOCIETY OF ACTUARIES<br>Predictive Analytics Exam
 66782 observations and 8 feactures
   
 * Any preprocessing?
-  * Handle missing data
-  * Scale value
+  * one-hot encoding for categorical feature
+  * minmax normalization
 
 ### code
 
-* Which method do you use?
+* Which method do you use? <br>
+xgboost for binary classification  
 * What is a null model for comparison?
-* How do your perform evaluation? ie. Cross-validation, or extra separated data
-
+* How do your perform evaluation? <br>
+Cross-validation
 ### results
 
 * Which metric do you use 
-  * precision, recall, R-square
+  * average AUC of test data in kfold
 * Is your improvement significant?
-* What is the challenge part of your project?
+* What is the challenge part of your project? 
 
 ## References
 * Code/implementation which you include/reference (__You should indicate in your presentation if you use code for others. Otherwise, cheating will result in 0 score for final project.__)
 * Packages you use
+  * mltools
+  * data.table
+  * xgboost
+  * ROCR
+  * ggplot2
+  * plotROC
+  
 * Related publications
 
 
