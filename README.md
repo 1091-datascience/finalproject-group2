@@ -51,7 +51,7 @@ xgboost for binary classification
 ### results
 
 * Which metric do you use <br>
-average AUC of test data in kfold
+average AUC, Recall, precision and F1 score of testing data in kfold
 * Is your improvement significant?
 * What is the challenge part of your project? 
 
