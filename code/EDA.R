@@ -18,7 +18,7 @@ png("box_plot_ER.png", width=600, height=600)
 ggplot(data = data, mapping = aes(x = Readmission.Status, y = ER)) + geom_boxplot()
 dev.off() 
 
-##bar plot ()
+##bar plot 
 freq(data) 
 plot_num(data)
 
