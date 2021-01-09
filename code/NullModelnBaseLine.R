@@ -1,5 +1,5 @@
 # ---- libs ----
-libs = c('ROCR')
+libs = c('ROCR', 'ggplot2', 'plotROC')
 for(lib in libs){
   if (!require(lib, character.only=TRUE )){
     install.packages(lib)
@@ -9,7 +9,6 @@ for(lib in libs){
 # ---- load data ----
 data = read.csv('data/data.csv', stringsAsFactors = TRUE)
 data$Readmission.Status = as.factor(data$Readmission.Status)
-summary(data)
 
 # ----  functions ----
 getFolds = function(fold.k, df){
@@ -31,11 +30,19 @@ getFolds = function(fold.k, df){
   }
   return(fold.list)
 }
-getAUC = function(predicts, references){
+getAUC = function(predicts, references, ifRoc=FALSE){
   pred = prediction(predicts, references)
   auc = performance(pred, 'auc')
   
-  return(round(auc@y.values[[1]], 2))
+  roc = NULL
+  if(ifRoc){
+    roc = performance(pred, measure="tpr", x.measure="fpr")
+    return(list(auc=round(auc@y.values[[1]], 2), roc=roc))
+  }
+  else{
+    return(round(auc@y.values[[1]], 2))
+  }
+  
 }
 crossValidate = function(fold.list, fmla, label, method='lgr'){
   ## cross validate
@@ -43,6 +50,9 @@ crossValidate = function(fold.list, fmla, label, method='lgr'){
   training.auc = c()
   validation.auc = c()
   testing.auc = c()
+
+  testing.predictions = c()
+  
   for (i in folds) {
     testing.data = NULL
     validation.data = NULL
@@ -70,14 +80,16 @@ crossValidate = function(fold.list, fmla, label, method='lgr'){
     
     if(method =='lgr'){
       model = glm(fmla, data=training.data, family=binomial(link="logit"))
-      # get AUC
       training.pred = predict(model, type="response")
       validation.pred = predict(model, newdata=validation.data, type="response")
       testing.pred = predict(model, newdata=testing.data, type="response")
+      
+      testing.predictions = c(testing.predictions, testing.pred)
     }
     else{
       print('null model')
     }
+    
     training.auc = c(training.auc, getAUC(training.pred, training.data[[label]]))
     validation.auc = c(validation.auc, getAUC(validation.pred, validation.data[[label]]))
     testing.auc = c(testing.auc, getAUC(testing.pred, testing.data[[label]]))
@@ -88,7 +100,7 @@ crossValidate = function(fold.list, fmla, label, method='lgr'){
   validation.auc = c(validation.auc, round(mean(validation.auc), 2))
   testing.auc = c(testing.auc, round(mean(testing.auc), 2))
   
-  return(list(training=training.auc, validation=validation.auc, testing=testing.auc))
+  return(list(auc=list(training=training.auc, validation=validation.auc, testing=testing.auc), testing=testing.predictions))
 }
 
 # ----  test models ---- 
@@ -98,7 +110,9 @@ label = 'Readmission.Status'
 
 ## baseline (logistic regression)
 fmla = as.formula('Readmission.Status~.')
-baseline.auc = crossValidate(data.folds, fmla, label, method='lgr')
+baseline.results = crossValidate(data.folds, fmla, label, method='lgr')
+baseline.auc = baseline.results$auc
+testing.predictions = baseline.results$testing
 
 ## null model 
 
@@ -117,3 +131,19 @@ baseline.df = data.frame(list(set=column.names,
 
 ## write files
 write.csv(baseline.df, file='results/baseline.csv', fileEncoding="UTF-8", row.names=F, quote=FALSE)
+
+# ---- plot ----
+fold.list = c()
+labels = c()
+for(i in 1:fold.k){
+  fold.list = c(fold.list, rep(paste("fold",i), dim(data.folds[[i]])[1]))
+  labels = c(labels, data.folds[[i]]$Readmission.Status)
+}
+
+roc.data = data.frame(list(label=labels, pred=testing.predictions, fold=fold.list))
+
+ggplot(roc.data, aes(d=labels, m=pred, color=fold)) + geom_roc(n.cuts = 0) +
+  geom_abline(slope = 1,intercept = 0 ,lty=2,lwd=0.8) + 
+  labs(x="FPR",y="TPR",title="ROC curve") +
+  theme(plot.title=element_text(hjust = 0.5)) +
+  annotate("text",x=0.65,y=0.1,label=paste("average AUC =", baseline.auc$testing[6]))
