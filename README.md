@@ -64,7 +64,7 @@ average AUC of test data in kfold
   * ROCR
   * ggplot2
   * plotROC
-  
+  * funModeling
 * Related publications
 
 
