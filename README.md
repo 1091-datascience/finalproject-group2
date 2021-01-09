@@ -36,6 +36,7 @@ SOCIETY OF ACTUARIES<br>Predictive Analytics Exam
 
 * Input format <br>
 66782 observations and 8 feactures
+![](https://github.com/1091-datascience/finalproject-group2/blob/master/features.jpg)
   
 * Any preprocessing?
   * one-hot encoding for categorical feature
