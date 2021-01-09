@@ -8,7 +8,7 @@ for(lib in libs){
 
 # ---- load data ----
 data = read.csv('data/data.csv', stringsAsFactors = TRUE)
-data$Readmission.Status = as.factor(data$Readmission.Status)
+p.null = sum(data$Readmission.Status) / length(data$Readmission.Status)
 
 # ----  functions ----
 getFolds = function(fold.k, df){
@@ -44,7 +44,7 @@ getAUC = function(predicts, references, ifRoc=FALSE){
   }
   
 }
-crossValidate = function(fold.list, fmla, label, method='lgr'){
+crossValidate = function(fold.list, fmla, label, method='lgr', pNull=NULL){
   ## cross validate
   folds = 1:length(fold.list)
   training.auc = c()
@@ -86,8 +86,13 @@ crossValidate = function(fold.list, fmla, label, method='lgr'){
       
       testing.predictions = c(testing.predictions, testing.pred)
     }
-    else{
+    else if(method == 'null'){
       print('null model')
+      training.pred = rep(pNull, dim(training.data)[1])
+      validation.pred = rep(pNull, dim(validation.data)[1])
+      testing.pred = rep(pNull, dim(testing.data)[1])
+      
+      testing.predictions = c(testing.predictions, testing.pred)
     }
     
     training.auc = c(training.auc, getAUC(training.pred, training.data[[label]]))
@@ -112,9 +117,36 @@ label = 'Readmission.Status'
 fmla = as.formula('Readmission.Status~.')
 baseline.results = crossValidate(data.folds, fmla, label, method='lgr')
 baseline.auc = baseline.results$auc
-testing.predictions = baseline.results$testing
+base.predictions = baseline.results$testing
 
 ## null model 
+null.results = crossValidate(data.folds, fmla, label, method='null', pNull=p.null)
+null.auc = null.results$auc
+null.predictions = null.results$testing
+
+# ---- plot ----
+fold.list = c()
+labels = c()
+for(i in 1:fold.k){
+  fold.list = c(fold.list, rep(paste("fold",i), dim(data.folds[[i]])[1]))
+  labels = c(labels, data.folds[[i]]$Readmission.Status)
+}
+
+base.roc = data.frame(list(label=labels, pred=base.predictions, fold=fold.list))
+null.roc = data.frame(list(label=labels, pred=null.predictions, fold=fold.list))
+
+ggplot(base.roc, aes(d=labels, m=pred, color=fold)) + geom_roc(n.cuts = 0) +
+  geom_abline(slope = 1,intercept = 0 ,lty=2,lwd=0.8) + 
+  labs(x="FPR",y="TPR",title="ROC curve") +
+  theme(plot.title=element_text(hjust = 0.5)) +
+  annotate("text",x=0.65,y=0.1,label=paste("average AUC =", baseline.auc$testing[6]))
+
+ggplot(null.roc, aes(d=labels, m=pred, color=fold)) + geom_roc(n.cuts = 0) +
+  geom_abline(slope = 1,intercept = 0 ,lty=2,lwd=0.8) + 
+  labs(x="FPR",y="TPR",title="ROC curve") +
+  theme(plot.title=element_text(hjust = 0.5)) +
+  annotate("text",x=0.65,y=0.1,label=paste("average AUC =", null.auc$testing[6]))
+
 
 # ---- write performance file ---- 
 ## set column names
@@ -129,21 +161,14 @@ baseline.df = data.frame(list(set=column.names,
                               ),
                          stringsAsFactors=FALSE)
 
+null.df = data.frame(list(set=column.names,
+                              training=null.auc$training,
+                              validation=null.auc$validation,
+                              test=null.auc$testing
+                              ),
+                         stringsAsFactors=FALSE)
+
+
 ## write files
 write.csv(baseline.df, file='results/baseline.csv', fileEncoding="UTF-8", row.names=F, quote=FALSE)
-
-# ---- plot ----
-fold.list = c()
-labels = c()
-for(i in 1:fold.k){
-  fold.list = c(fold.list, rep(paste("fold",i), dim(data.folds[[i]])[1]))
-  labels = c(labels, data.folds[[i]]$Readmission.Status)
-}
-
-roc.data = data.frame(list(label=labels, pred=testing.predictions, fold=fold.list))
-
-ggplot(roc.data, aes(d=labels, m=pred, color=fold)) + geom_roc(n.cuts = 0) +
-  geom_abline(slope = 1,intercept = 0 ,lty=2,lwd=0.8) + 
-  labs(x="FPR",y="TPR",title="ROC curve") +
-  theme(plot.title=element_text(hjust = 0.5)) +
-  annotate("text",x=0.65,y=0.1,label=paste("average AUC =", baseline.auc$testing[6]))
+write.csv(null.df, file='results/null.csv', fileEncoding="UTF-8", row.names=F, quote=FALSE)

@@ -1,0 +1,7 @@
+set,training,validation,test
+fold1,0.5,0.5,0.5
+fold2,0.5,0.5,0.5
+fold3,0.5,0.5,0.5
+fold4,0.5,0.5,0.5
+fold5,0.5,0.5,0.5
+ave.,0.5,0.5,0.5
