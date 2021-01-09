@@ -173,17 +173,55 @@ ggplot(plotdata, aes(d = true, m = score, color = fold)) + geom_roc(n.cuts = 0) 
   annotate("text",x=0.65,y=0.1,label=paste("average AUC =",performance[kfold+1,4]))
   
 
-
-
-
-
-
-
-
 #匯出====
+save(FOLD,file="FOLD.Rdata")
 write.csv(performance,file="result.csv",quote=F,row.names=F)
 
+#threshold====
+performance2 = matrix(NA,101,5);performance2 = as.data.frame(performance2)
+colnames(performance2) = c("threshold","Precision","recall","specificity","F1")
+for(i in 1:101){
+  performance2$threshold[i] = (i-1)/100 
+}
 
+threshold = function(x){
+  
+  precision=c()
+  recall=c()
+  specificity=c()
+  F1=c()
+  
+  for(f in 1:kfold){
+    pred = ifelse(FOLD[[f]][[1]]$score >= x, 1, 0);pred = factor(pred,levels = c(0,1))
+    true = factor(FOLD[[f]][[1]]$Readmission.Status,levels = c(0,1))
+    CM = table(true,pred)
+    
+    p = sum(diag(CM))/sum(CM)
+    precision[f] = p
+    
+    r = CM[1,1]/sum(CM[1,])
+    recall[f] = r
+    
+    s = CM[2,2]/sum(CM[2,]) 
+    specificity[f] = s
+    
+    f1 = 2*p*r/(p+r)
+    F1[f] = f1  
+  }
+  precision = mean(precision)
+  recall = mean(recall)
+  specificity = mean(specificity)
+  F1 = mean(F1)
+  return(c(precision,recall,specificity,F1))
+}
+
+for(i in 1:101){
+  performance2[i,2:5] = threshold((i-1)/100)
+}
+
+plot2 = gather(performance2,key="index",value="values",Precision,recall,specificity,F1)
+
+ggplot(plot2,aes(x=threshold,y=values,col=index))+geom_line(lwd=1)
 
 
 
