@@ -47,7 +47,7 @@ SOCIETY OF ACTUARIES<br>Predictive Analytics Exam
 xgboost for binary classification  
 * What is a null model for comparison?
 * How do your perform evaluation? <br>
-Cross-validation
+5-fold Cross-validation
 ### results
 
 * Which metric do you use <br>
