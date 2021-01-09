@@ -4,7 +4,7 @@ library(ggplot2)
 load("final_project_data.Rdata")
 data$Readmission.Status<-as.factor(data$Readmission.Status)
 
-##box plot (LOS/Age/HCC.Riskscore) 
+##box plot (LOS/Age/HCC.Riskscore/ER) 
 png("box_plot_LOS.png", width=600, height=600)
 ggplot(data = data, mapping = aes(x = Readmission.Status, y = LOS)) + geom_boxplot()
 dev.off() 
