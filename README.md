@@ -54,7 +54,7 @@ predict the probability of all the data as a constant, which equals to the perce
 ### results
 
 * Which metric do you use <br>
-average AUC, Recall, Precision and F1 score of testing data in kfold
+average AUC, Recall, Accuracy and specificity of testing data in kfold
 * Is your improvement significant?
 * What is the challenge part of your project? 
 
