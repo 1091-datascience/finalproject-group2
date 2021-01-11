@@ -41,7 +41,6 @@ SOCIETY OF ACTUARIES<br>Predictive Analytics Exam
   
 * Any preprocessing?
   * one-hot encoding for categorical feature
-  * minmax normalization
 
 ### code
 
