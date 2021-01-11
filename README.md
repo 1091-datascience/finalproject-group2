@@ -66,6 +66,7 @@ average AUC, Recall, Accuracy and specificity of testing data in kfold
   * ROCR
   * ggplot2
   * plotROC
+  * tidyr
   * funModeling
 * Related publications
 
