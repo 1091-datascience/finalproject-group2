@@ -36,22 +36,24 @@ SOCIETY OF ACTUARIES<br>Predictive Analytics Exam
 
 * Input format <br>
 66782 observations and 8 feactures
+
+![](https://github.com/1091-datascience/finalproject-group2/blob/master/features.jpg)
   
 * Any preprocessing?
   * one-hot encoding for categorical feature
-  * minmax normalization
 
 ### code
 
 * Which method do you use? <br>
 xgboost for binary classification  
 * What is a null model for comparison?
+predict the probability of all the data as a constant, which equals to the percentage of the positive observations 
 * How do your perform evaluation? <br>
-Cross-validation
+5-fold Cross-validation
 ### results
 
 * Which metric do you use <br>
-average AUC of test data in kfold
+average AUC, Recall, Accuracy and specificity of testing data in kfold
 * Is your improvement significant?
 * What is the challenge part of your project? 
 
@@ -64,7 +66,9 @@ average AUC of test data in kfold
   * ROCR
   * ggplot2
   * plotROC
-  
+  * tidyr
+  * funModeling
+  * randomForest
 * Related publications
 
 
