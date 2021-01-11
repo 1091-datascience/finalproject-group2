@@ -68,6 +68,7 @@ average AUC, Recall, Accuracy and specificity of testing data in kfold
   * plotROC
   * tidyr
   * funModeling
+  * randomForest
 * Related publications
 
 
