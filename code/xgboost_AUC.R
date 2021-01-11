@@ -4,6 +4,7 @@ library("xgboost")
 library("ROCR")
 library("ggplot2")
 library("plotROC")
+library("tidyr")
 #user control : kfold ====
 
 kfold = 5
